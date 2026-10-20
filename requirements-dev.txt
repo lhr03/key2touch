@@ -1,0 +1,3 @@
+# 运行时只依赖 Python 标准库（ctypes + tkinter），无需安装任何第三方包。
+# 这里仅列出「从源码打包成 exe」所需的开发依赖。
+pyinstaller>=6.13

@@ -1,0 +1,32 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ---- PyInstaller ----
+build/
+dist/
+*.spec.bak
+
+# ---- 运行时产物（本地配置 / 日志，不应提交）----
+KeyTouch.config.json
+keytouch_debug.log
+*.log
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---- 临时测试脚本（本机调试用，前缀下划线）----
+_*.py
+_*.ps1
+_*.txt
+_*.json
+_*.png
