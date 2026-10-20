@@ -1,4 +1,4 @@
-# KeyTouch
+# key2touch
 
 **把实体键盘当成触摸屏用。** Windows 绿色单文件工具，把主键盘区按物理拓扑映射成屏幕上的触点 —— 按下键就是手指按下，松开就是抬起，支持真多点触控。
 
@@ -40,7 +40,7 @@
 
 ### 方式一：直接用（下载 exe）
 
-1. 到 [Releases](../../releases) 下载 `KeyTouch.exe`；
+1. 到 [Releases](../../releases) 下载 `key2touch.exe`；
 2. 双击运行，**免安装**，不写注册表，不联网；
 3. 选目标显示器 → 点右上角「点此启用」，或按 `Scroll Lock`；
 4. 现在按键盘上的字母/数字键就是"触摸"了。再按一次 `Scroll Lock` 关闭，键盘立刻恢复打字。
@@ -52,8 +52,8 @@
 
 ```bash
 git clone <this-repo>
-cd KeyTouch
-python keytouch.py
+cd key2touch
+python key2touch.py
 ```
 
 运行时**只依赖 Python 标准库**（`ctypes` + `tkinter`），不需要 `pip install` 任何东西。需要 Python 3.9+ 且带 tkinter（官方安装包默认包含）。
@@ -124,7 +124,7 @@ python keytouch.py
 
 ## 工作原理
 
-程序由三部分组成，都在 `keytouch.py` 单文件内：
+程序由三部分组成，都在 `key2touch.py` 单文件内：
 
 ```
  ① 低级键盘钩子          ② 坐标映射                ③ 输入注入
@@ -137,7 +137,7 @@ python keytouch.py
 
 - **钩子线程**：独立线程跑消息循环（低级钩子必须由安装它的线程处理消息）。命中「需要吞掉」的键就返回 1，否则放行；只识别 `WM_KEYDOWN`/`WM_KEYUP`，不干扰 `WM_SYSKEYDOWN` 系列。
 - **注入**：触摸指针用 PID 池管理，最多 10 个并发触点；鼠标模式拆成「先移动 → 再按下」两次 `SendInput`，比一条指令里同时塞移动和点击更可靠。
-- **配置**：JSON 存 exe 同目录；目录只读时自动退到 `%APPDATA%\KeyTouch\`。
+- **配置**：JSON 存 exe 同目录；目录只读时自动退到 `%APPDATA%\key2touch\`。
 
 ### 踩过的坑（实测记录）
 
@@ -173,11 +173,11 @@ python keytouch.py
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-脚本会建 `.venv`、装 PyInstaller、输出 `dist\KeyTouch.exe`（约 11 MB，单文件、无控制台窗口）。也可以手动执行：
+脚本会建 `.venv`、装 PyInstaller、输出 `dist\key2touch.exe`（约 11 MB，单文件、无控制台窗口）。也可以手动执行：
 
 ```bash
 pip install -r requirements-dev.txt
-python -m PyInstaller --onefile --noconsole --name KeyTouch --clean --noconfirm keytouch.py
+python -m PyInstaller --onefile --noconsole --name key2touch --clean --noconfirm key2touch.py
 ```
 
 调试时加 `--console` 打包，可以看到标准输出。
@@ -191,9 +191,9 @@ python -m PyInstaller --onefile --noconsole --name KeyTouch --clean --noconfirm 
 - **✓ 注入完全正常** → 程序这一侧没问题，问题在目标程序（见下表第 1、2 条）
 - **✗ 没有生效** → 按它给出的下一步做（改模式 / 以管理员重启）
 
-状态栏还常驻两个有用的信息：**「前台目标」**（当前最前面的程序是谁、是否管理员权限）和 **「落点窗口」**（每按一次键就显示这个落点下面是哪个窗口）。如果落点窗口又是 `KeyTouch.exe`，说明自己的面板挡住了 —— 这是"没反应"最常见的原因。
+状态栏还常驻两个有用的信息：**「前台目标」**（当前最前面的程序是谁、是否管理员权限）和 **「落点窗口」**（每按一次键就显示这个落点下面是哪个窗口）。如果落点窗口又是 `key2touch.exe`，说明自己的面板挡住了 —— 这是"没反应"最常见的原因。
 
-exe 同目录会生成 `keytouch_debug.log`，记录每次按键的「捕获/放行」、落点坐标、落点窗口与注入结果。
+exe 同目录会生成 `key2touch_debug.log`，记录每次按键的「捕获/放行」、落点坐标、落点窗口与注入结果。
 
 | 现象 | 原因与解决 |
 |---|---|
@@ -204,7 +204,7 @@ exe 同目录会生成 `keytouch_debug.log`，记录每次按键的「捕获/放
 | 点得到但位置偏 | 调「边缘内缩」；改用「取当前窗口区域」；让本程序与游戏保持一致的 DPI 行为 |
 | 精度不够 | ① 缩小映射区域（最有效）；② 方向键微调；③ 勾选边缘扩展键增加触点密度 |
 | 打字被吞了 | 总开关开着或按住键被压着 → 按总开关热键关闭 |
-| 恢复默认 | 删掉同目录的 `KeyTouch.config.json`，或点「恢复默认」 |
+| 恢复默认 | 删掉同目录的 `key2touch.config.json`，或点「恢复默认」 |
 
 > **别被"触摸圆点"骗了**：Windows 在触摸时会画一个小圆点/涟漪，那只是视觉反馈，不代表点中了任何东西。
 > 本程序默认关闭该圆点（可在「注入方式」那一行重新打开）。

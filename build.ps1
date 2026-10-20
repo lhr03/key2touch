@@ -1,6 +1,6 @@
 #Requires -Version 5.1
 <#
-    KeyTouch 打包脚本 —— 生成 dist\KeyTouch.exe（单文件、免安装）
+    key2touch 打包脚本 —— 生成 dist\key2touch.exe（单文件、免安装）
 
     用法（在本目录下）：
         powershell -ExecutionPolicy Bypass -File .\build.ps1
@@ -71,20 +71,20 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host '[4/5] 打包（单文件、无控制台窗口）...' -ForegroundColor Cyan
-& $vpy -m PyInstaller --onefile --noconsole --name KeyTouch --clean --noconfirm keytouch.py
+& $vpy -m PyInstaller --onefile --noconsole --name key2touch --clean --noconfirm key2touch.py
 if ($LASTEXITCODE -ne 0) {
     Write-Host '打包失败。' -ForegroundColor Red
     exit 1
 }
 
 Write-Host '[5/5] 完成' -ForegroundColor Cyan
-$exe = Join-Path $PSScriptRoot 'dist\KeyTouch.exe'
+$exe = Join-Path $PSScriptRoot 'dist\key2touch.exe'
 if (Test-Path $exe) {
     $mb = (Get-Item $exe).Length / 1MB
     Write-Host ''
-    Write-Host ('  产物: dist\KeyTouch.exe  ({0:N1} MB)' -f $mb) -ForegroundColor Green
+    Write-Host ('  产物: dist\key2touch.exe  ({0:N1} MB)' -f $mb) -ForegroundColor Green
     Write-Host '  直接双击运行即可，无需安装。' -ForegroundColor Green
 } else {
-    Write-Host '未找到 dist\KeyTouch.exe，请检查上面的输出。' -ForegroundColor Red
+    Write-Host '未找到 dist\key2touch.exe，请检查上面的输出。' -ForegroundColor Red
     exit 1
 }

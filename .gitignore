@@ -12,8 +12,8 @@ dist/
 *.spec.bak
 
 # ---- 运行时产物（本地配置 / 日志，不应提交）----
-KeyTouch.config.json
-keytouch_debug.log
+key2touch.config.json
+key2touch_debug.log
 *.log
 
 # ---- 编辑器 / 系统 ----

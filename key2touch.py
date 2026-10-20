@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-KeyTouch - 用实体键盘模拟触摸屏 (Windows 绿色单文件版)
+key2touch - 用实体键盘模拟触摸屏 (Windows 绿色单文件版)
 ------------------------------------------------------
 核心思路:
   主键盘区(不含小键盘)的物理键位 -> 归一化坐标 -> 屏幕/指定区域上的绝对触点
@@ -29,7 +29,7 @@ from ctypes import (wintypes, byref, c_int, c_uint, c_uint32, c_long, c_ulong,
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-APP_NAME = "KeyTouch"
+APP_NAME = "key2touch"
 APP_VER = "1.0.2"
 
 # --------------------------------------------------------------------------
@@ -576,7 +576,7 @@ def window_at_info(x, y):
         return ""
 
 
-DEBUG_LOG = os.path.join(app_dir(), "keytouch_debug.log")
+DEBUG_LOG = os.path.join(app_dir(), "key2touch_debug.log")
 
 
 def dbg(msg):
@@ -590,7 +590,7 @@ def dbg(msg):
 
 def cfg_path():
     d = app_dir()
-    p = os.path.join(d, "KeyTouch.config.json")
+    p = os.path.join(d, "key2touch.config.json")
     # 注意: 这里不能顺手 open(p,'a') 建文件, 否则"首次运行"判断会失效
     if os.path.exists(p):
         if os.access(p, os.W_OK):
@@ -598,15 +598,15 @@ def cfg_path():
     elif os.access(d, os.W_OK):
         return p
     base = os.environ.get("APPDATA", os.path.expanduser("~"))
-    d2 = os.path.join(base, "KeyTouch")
+    d2 = os.path.join(base, "key2touch")
     try:
         os.makedirs(d2, exist_ok=True)
     except Exception:
         pass
-    return os.path.join(d2, "KeyTouch.config.json")
+    return os.path.join(d2, "key2touch.config.json")
 
 
-class KeyTouchApp:
+class Key2TouchApp:
     def __init__(self):
         # pyinstaller onefile 下, tkinter 的 tcl/tk 数据目录
         if getattr(sys, "frozen", False):
@@ -653,7 +653,7 @@ class KeyTouchApp:
         self.diag = None
         self.diag_test = None
         dbg("=" * 60)
-        dbg("KeyTouch %s 启动 | frozen=%s | dir=%s" % (APP_VER, getattr(sys, "frozen", False), app_dir()))
+        dbg("key2touch %s 启动 | frozen=%s | dir=%s" % (APP_VER, getattr(sys, "frozen", False), app_dir()))
 
         dbg("步骤1 配置与显示器 OK, 显示器数=%d" % len(self.monitors))
         self.build_ui()
@@ -941,7 +941,7 @@ class KeyTouchApp:
             now = time.time()
             if now - getattr(self, "_last_fail", 0) > 3:
                 self._last_fail = now
-                self.events_ui(("log", "注入被拒绝: 目标窗口权限高于本程序, 请以管理员身份运行 KeyTouch"))
+                self.events_ui(("log", "注入被拒绝: 目标窗口权限高于本程序, 请以管理员身份运行 key2touch"))
 
     def touch_down(self, vk):
         if vk in self.active:
@@ -1053,7 +1053,7 @@ class KeyTouchApp:
 
         top = ttk.Frame(self.root, padding=(12, 10))
         top.pack(fill="x")
-        ttk.Label(top, text="KeyTouch", style="Header.TLabel").pack(side="left")
+        ttk.Label(top, text="key2touch", style="Header.TLabel").pack(side="left")
         ttk.Label(top, text="用实体键盘模拟触摸屏 · 绿色版 v" + APP_VER).pack(side="left", padx=10)
 
         self.btn_enable = tk.Button(top, text="未启用", width=14, bg="#E8EDF2", fg="#1F2933",
@@ -2095,7 +2095,7 @@ class KeyTouchApp:
             "2. 安卓模拟器多半只认鼠标 → 注入方式改「鼠标事件」或「双发」。\n"
             "3. 触摸API不可用(老系统/远程桌面) → 程序会自动回退到鼠标模式。\n\n"
             "【配置】\n"
-            "· 配置保存在程序同目录 KeyTouch.config.json, 删掉即恢复默认, 真正的绿色版。\n"
+            "· 配置保存在程序同目录 key2touch.config.json, 删掉即恢复默认, 真正的绿色版。\n"
         )
         messagebox.showinfo("使用说明", txt)
 
@@ -2105,7 +2105,7 @@ class KeyTouchApp:
 
 # --------------------------------------------------------------------------
 def selftest():
-    print("KeyTouch selftest")
+    print("key2touch selftest")
     print("  sizeof POINTER_INFO       =", sizeof(POINTER_INFO))
     print("  sizeof POINTER_TOUCH_INFO =", sizeof(POINTER_TOUCH_INFO))
     print("  sizeof INPUT              =", sizeof(INPUT))
@@ -2115,7 +2115,7 @@ def selftest():
     for i, m in enumerate(enum_monitors()):
         print("  monitor %d: %s %dx%d @(%d,%d) primary=%s" %
               (i, m["name"], m["w"], m["h"], m["x"], m["y"], m["primary"]))
-    app = KeyTouchApp.__new__(KeyTouchApp)
+    app = Key2TouchApp.__new__(Key2TouchApp)
     app.cfg = dict(DEFAULT_CFG)
     app.monitors = enum_monitors()
     print("  mapped points             =", len(app.all_points()))
@@ -2128,12 +2128,12 @@ if __name__ == "__main__":
     if "--selftest" in sys.argv:
         sys.exit(selftest())
     try:
-        KeyTouchApp().run()
+        Key2TouchApp().run()
     except Exception:
         err = traceback.format_exc()
         dbg("!! 启动异常:\n" + err)
         try:
-            messagebox.showerror("KeyTouch 启动失败", err)
+            messagebox.showerror("key2touch 启动失败", err)
         except Exception:
             pass
         try:
