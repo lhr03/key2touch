@@ -30,3 +30,8 @@ _*.ps1
 _*.txt
 _*.json
 _*.png
+
+# ---- 本地凭据（绝不提交）----
+.token
+*.token
+.env
