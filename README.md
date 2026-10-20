@@ -40,7 +40,8 @@
 
 ### 方式一：直接用（下载 exe）
 
-1. 到 [Releases](../../releases) 下载 `key2touch.exe`；
+1. 到 [Releases](https://github.com/lhr03/key2touch/releases/latest) 下载 `key2touch.exe`
+   （或直接下最新版：[key2touch.exe](https://github.com/lhr03/key2touch/releases/latest/download/key2touch.exe)）；
 2. 双击运行，**免安装**，不写注册表，不联网；
 3. 选目标显示器 → 点右上角「点此启用」，或按 `Scroll Lock`；
 4. 现在按键盘上的字母/数字键就是"触摸"了。再按一次 `Scroll Lock` 关闭，键盘立刻恢复打字。
@@ -51,7 +52,7 @@
 ### 方式二：从源码运行
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/lhr03/key2touch.git
 cd key2touch
 python key2touch.py
 ```
